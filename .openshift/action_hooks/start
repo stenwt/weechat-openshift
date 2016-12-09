@@ -2,4 +2,10 @@
 # The logic to start up your application should be put in this
 # script. The application will work only if it binds to
 # $OPENSHIFT_DIY_IP:8080
-nohup $OPENSHIFT_REPO_DIR/diy/testrubyserver.rb $OPENSHIFT_DIY_IP $OPENSHIFT_REPO_DIR/diy |& /usr/bin/logshifter -tag diy &
+export TERM=xterm
+export SCREENDIR=$OPENSHIFT_DATA_DIR/.screen
+sed -i "s:^weechat.*$:weechat = $OPENSHIFT_DIY_PORT:" $OPENSHIFT_REPO_DIR/diy/conf/relay.conf
+sed -i "s:^bind_address.*$:bind_address = $OPENSHIFT_DIY_IP:" $OPENSHIFT_REPO_DIR/diy/conf/relay.conf
+sed -i "s:^path.*$:path = $OPENSHIFT_LOG_DIR:" $OPENSHIFT_REPO_DIR/diy/conf/logger.conf
+cd $OPENSHIFT_LOG_DIR
+screen -dm $OPENSHIFT_REPO_DIR/bin/weechat -d $OPENSHIFT_REPO_DIR/diy/conf 
